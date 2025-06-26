@@ -1,0 +1,124 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class PersonNode {
+public:
+    string personName;
+    PersonNode* nextPerson;
+    PersonNode* prevPerson;
+
+    PersonNode(string name, PersonNode* next = nullptr, PersonNode* prev = nullptr) {
+        this->personName = name;
+        this->nextPerson = next;
+        this->prevPerson = prev;
+    }
+};
+
+class PersonList {
+private:
+    PersonNode* head;
+    PersonNode* tail;
+
+public:
+    PersonList(PersonNode* start = nullptr) {
+        this->head = start;
+        this->tail = start;
+        if (start) {
+            start->nextPerson = nullptr;
+            start->prevPerson = nullptr;
+        }
+    }
+
+    void addPerson(PersonNode* newPerson) {
+        if (!newPerson) return;
+
+        newPerson->nextPerson = nullptr;
+        newPerson->prevPerson = nullptr;
+
+        if (!head) {
+            head = tail = newPerson;
+        } else {
+            tail->nextPerson = newPerson;
+            newPerson->prevPerson = tail;
+            tail = newPerson;
+        }
+    }
+
+    void showList() {
+        PersonNode* current = head;
+        if (!current) {
+            cout << "List is empty" << endl;
+            return;
+        }
+        while (current != nullptr) {
+            cout << current->personName << " <-> ";
+            current = current->nextPerson;
+        }
+        cout << "nullptr" << endl;
+    }
+
+    void removeByName(string targetName) {
+        if (!head) return;
+
+        // Case 1: remove head
+        if (head->personName == targetName) {
+            PersonNode* temp = head;
+            head = head->nextPerson;
+            if (head) head->prevPerson = nullptr;
+            else tail = nullptr;
+            delete temp;
+            return;
+        }
+
+        // Traverse to find node to delete
+        PersonNode* current = head->nextPerson;
+        while (current && current->personName != targetName) {
+            current = current->nextPerson;
+        }
+
+        if (current) {
+            if (current->prevPerson)
+                current->prevPerson->nextPerson = current->nextPerson;
+            if (current->nextPerson)
+                current->nextPerson->prevPerson = current->prevPerson;
+            if (current == tail)
+                tail = current->prevPerson;
+            delete current;
+        }
+    }
+
+    PersonNode* getHead() const {
+        return head;
+    }
+};
+
+int main() {
+    // Create nodes
+    PersonNode* p1 = new PersonNode("Albert");
+    PersonNode* p2 = new PersonNode("Chris");
+    PersonNode* p3 = new PersonNode("Billy");
+
+    // Create list and add persons
+    PersonList contactList(p1);
+    contactList.addPerson(p2);
+    contactList.addPerson(p3);
+
+    // Display list
+    contactList.showList();
+
+    // Remove a person
+    contactList.removeByName("Chris");
+    cout << "After removing Chris: ";
+    contactList.showList();
+
+    // Clean up memory
+    PersonNode* current = contactList.getHead();
+    while (current) {
+        PersonNode* temp = current;
+        current = current->nextPerson;
+        delete temp;
+    }
+
+    return 0;
+}
