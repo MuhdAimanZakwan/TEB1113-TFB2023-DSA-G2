@@ -15,13 +15,13 @@ public:
 
 class PersonList {
 private:
-    PersonNode* first;
-    PersonNode* last;
+    PersonNode* head;
+    PersonNode* tail;
 
 public:
     PersonList(PersonNode* start = nullptr) {
-        this->first = start;
-        this->last = start;
+        this->head = start;
+        this->tail = start;
         if (start) start->nextPerson = nullptr;
     }
 
@@ -29,17 +29,17 @@ public:
         if (!newPerson) return;
         newPerson->nextPerson = nullptr;
 
-        if (!first) {
-            first = newPerson;
-            last = newPerson;
+        if (!head) {
+            head = newPerson;
+            tail = newPerson;
         } else {
-            last->nextPerson = newPerson;
-            last = newPerson;
+            tail->nextPerson = newPerson;
+            tail = newPerson;
         }
     }
 
     void showList() {
-        PersonNode* current = first;
+        PersonNode* current = head;
         if (!current) {
             cout << "List is empty" << endl;
             return;
@@ -52,17 +52,17 @@ public:
     }
 
     void removeByName(string targetName) {
-        if (!first) return;
+        if (!head) return;
 
-        if (first->personName == targetName) {
-            PersonNode* temp = first;
-            first = first->nextPerson;
+        if (head->personName == targetName) {
+            PersonNode* temp = head;
+            head = head->nextPerson;
             delete temp;
-            if (!first) last = nullptr;
+            if (!head) tail = nullptr;
             return;
         }
 
-        PersonNode* current = first;
+        PersonNode* current = head;
         while (current->nextPerson && current->nextPerson->personName != targetName) {
             current = current->nextPerson;
         }
@@ -70,13 +70,13 @@ public:
         if (current->nextPerson) {
             PersonNode* temp = current->nextPerson;
             current->nextPerson = temp->nextPerson;
-            if (temp == last) last = current;
+            if (temp == tail) tail = current;
             delete temp;
         }
     }
 
-    PersonNode* getFirst() const {
-        return first;
+    PersonNode* getHead() const {
+        return head;
     }
 };
 
@@ -95,7 +95,7 @@ int main() {
     cout << "After removing Chris: ";
     contactList.showList();
 
-    PersonNode* current = contactList.getFirst();
+    PersonNode* current = contactList.getHead();
     while (current) {
         PersonNode* temp = current;
         current = current->nextPerson;
