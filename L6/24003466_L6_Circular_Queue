@@ -1,0 +1,89 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    string data;
+    Node* next;
+    Node(string val) : data(val), next(nullptr) {}
+};
+
+class CircularQueue {
+private:
+    Node* rear;
+
+public:
+    CircularQueue() : rear(nullptr) {}
+
+    void enqueue(string val) {
+        Node* newNode = new Node(val);
+        if (!rear) {
+            rear = newNode;
+            rear->next = rear;
+        } else {
+            newNode->next = rear->next;
+            rear->next = newNode;
+            rear = newNode;
+        }
+        cout << val << " enqueued to circular queue." << endl;
+    }
+
+    void dequeue() {
+        if (!rear) {
+            cout << "Circular Queue Underflow!" << endl;
+            return;
+        }
+
+        Node* front = rear->next;
+        if (rear == front) {
+            cout << front->data << " dequeued from circular queue." << endl;
+            delete front;
+            rear = nullptr;
+        } else {
+            rear->next = front->next;
+            cout << front->data << " dequeued from circular queue." << endl;
+            delete front;
+        }
+    }
+
+    void peek() {
+        if (!rear) {
+            cout << "Circular Queue is empty." << endl;
+        } else {
+            cout << "Front element is " << rear->next->data << endl;
+        }
+    }
+
+    bool isEmpty() {
+        return rear == nullptr;
+    }
+
+    void display() {
+        if (!rear) {
+            cout << "Circular Queue is empty." << endl;
+            return;
+        }
+
+        Node* temp = rear->next;
+        cout << "Circular Queue contents: ";
+        do {
+            cout << temp->data << " <- ";
+            temp = temp->next;
+        } while (temp != rear->next);
+        cout << temp->data << endl; 
+    }
+};
+
+int main() {
+    CircularQueue CirQue;
+
+    CirQue.enqueue("Albert");
+    CirQue.enqueue("Chris");
+    CirQue.enqueue("Billy");
+    CirQue.enqueue("Jill");
+
+    CirQue.peek();
+    CirQue.display();
+
+    return 0;
+}
