@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Queue
+{
+private:
+    string *arr;     
+    int front;       
+    int rear;        
+    int capacity;    
+    int currentSize;
+    
+public:
+    Queue(int size = 100)
+    { 
+        capacity = size;
+        arr = new string[capacity];
+        front = 0;
+        rear = -1;
+        currentSize = 0;
+    }
+
+    void enqueue(string name)
+    {
+        if (currentSize >= capacity)
+        {
+            cout << "Queue is full" << endl;
+            return;
+        }
+
+        rear = (rear + 1) % capacity; 
+        arr[rear] = name;             
+        currentSize++;
+    }
+
+    void display_queue()
+    {
+        if (currentSize == 0)
+        {
+            cout << "Queue is empty" << endl;
+            return;
+        }
+
+        int count = 0;
+        int index = front;
+        while (count < currentSize)
+        {
+            cout << arr[index] << " <- ";
+            index = (index + 1) % capacity;
+            count++;
+        }
+        cout << "NULL" << endl;
+    }
+
+    void dequeue()
+    {
+        if (currentSize == 0)
+        {
+            cout << "Queue is empty" << endl;
+            return;
+        }
+
+        cout << "Removing: " << arr[front] << endl;
+        front = (front + 1) % capacity; 
+        currentSize--;
+    }
+};
+
+int main()
+{
+    Queue queue(100);
+
+    queue.enqueue("Albert");
+    queue.enqueue("Chris");
+    queue.enqueue("Billy");
+    queue.enqueue("Jill");
+
+    queue.display_queue();
+
+    queue.dequeue();
+    cout << "After Dequeue: ";
+    queue.display_queue();
+
+    return 0;
+}
