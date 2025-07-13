@@ -9,7 +9,7 @@ public:
     Node *next_ptr;
 
     Node(string name, Node *next_ptr = nullptr)
-    { // Constructor with default nullptr
+    { 
         this->name = name;
         this->next_ptr = next_ptr;
     }
@@ -22,7 +22,7 @@ private:
 
 public:
     Stack(Node *top = nullptr)
-    { // Constructor initializes top
+    {
         this->top = top;
         if (top)
             top->next_ptr = nullptr;
